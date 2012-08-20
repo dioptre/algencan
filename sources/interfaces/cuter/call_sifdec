@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PROBNAME=$1
+MASTSIF=$2
+SIFDEC=$3
+
+echo ${PROBNAME} >  sifdec.input
+echo "3"         >> sifdec.input
+echo "0"         >> sifdec.input
+echo ${PROBNAME} >> sifdec.input
+echo "0"         >> sifdec.input
+echo "2"         >> sifdec.input
+echo "1"         >> sifdec.input
+
+if [ -e ${MASTSIF}/${PROBNAME}.SIF ] ; then
+
+  echo "call_sifdec: Using ${PROBNAME}.SIF from ${MASTSIF}"
+
+  cp ${MASTSIF}/${PROBNAME}.SIF .
+
+  ${SIFDEC}/double/bin/sifdec < sifdec.input
+
+  rm ${PROBNAME}.SIF
+
+else
+  echo "call_sifdec: File ${PROBNAME}.SIF does not exist" \
+       "in ${MASTSIF}"
+fi
+
+rm sifdec.input
+

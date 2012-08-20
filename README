@@ -1,0 +1,270 @@
+This folder contains the ALGENCAN 2.3.7.
+
+File algencan-manual.pdf is a very first draft of the User Manual of
+ALGENCAN 2.3.7 that is not present in the current distribution but
+will be present soon.
+
+Interfaces with AMPL, C/C++, CUTEr, Java, Matlab, Octave, Python, R
+and TCL are included.
+
+Quick starts for using the stand alone Fortran 77 version of ALGENCAN
+2.3.7, as well as the AMPL, C/C++, CUTEr, Java, Matlab, Octave, Python,
+R and TCL interfaces follow:
+
+All the environment variables that will be mentioned from now on must
+be set within file $(ALGENCAN)/Makefile. The first environment
+variable that must be set is ALGENCAN that must point to the directory
+where ALGENCAN was installed, for example:
+
+ALGENCAN := $(HOME)/algencan
+
+This new version of ALGENCAN includes some algorithmic options that
+may require the usage of MA27 or MA57 from HSL to solve sparse linear
+systems. MC30 or MC77 can also be optionally used, in combination with
+MA27, to scale the linear systems. Those subroutines ARE NOT MANDATORY
+and ALGENCAN can be used without them. If you decide to provide any of
+the HSL subroutines, please, place a copy of each of them in folder
+$(ALGENCAN)/sources/hsl/.
+
+Note that the file corresponding to the MA57 subroutine must include
+all of its HSL, BLAS and MeTiS dependencies, which are distributed
+along with both the complete HSL library and the individual MA57
+package, available free of charge for academic research use.
+
+If you have purchased and downloaded the complete library, the files
+that need to be concatenated into one (named ma57ad.f) in order to
+satisfy the above mentioned dependencies are:
+
+   (i) From BLAS: dgemm.f, dgemv.f, dtpsv.f, idamax.f, lsame.f,
+                  xerbla.f;
+  (ii) From HSL:  fd15ad.f, ma57ad.f, mc21ad.f, mc34ad.f, mc47ad.f,
+                  mc59ad.f, mc64ad.f, mc71ad.f;
+ (iii) MeTiS dummy routine (metis.f).
+
+Finally, please observe that at the present time ALGENCAN supports
+only the Fortran 77, double precision version of those subroutines.
+
+Important: do not include idamax.f into ma57ad.f to compile the CUTEr
+interface.
+
+Stand alone Fortran 77:
+=======================
+
+1) Type make PROBNAME=toyprob. It will generate an executable file
+called algencan situated in folder $(ALGENCAN)/bin/fortran/.
+
+2) Move it to your own folder and run it typing ./algencan.
+
+3) Modify file toyprob.f situated in $(ALGENCAN)/sources/problems/ to
+solve your own problem.
+
+AMPL interface:
+===============
+
+1) Type make algencan-ampl. It will generate an executable file called
+algencan situated in folder $(ALGENCAN)/bin/ampl/.
+
+2) Go to your own folder and copy to it files algencan.run and
+toyprob.mod situated in $(ALGENCAN)/sources/interfaces/ampl/.
+
+3) Add folder $(ALGENCAN)/bin/ampl to your PATH environment variable.
+
+4) Enter into AMPL and run ALGENCAN typing include algencan.run.
+
+5) Modify file toyprob.mod in your own folder to solve a problem of
+your interest.
+
+Obs1: It is assumed that (i) the environment variable AMPL points to
+the directory where AMPL is installed and that (ii) you have
+downloaded solvers.tar from the AMPL web page at Netlib
+(http://netlib.sandia.gov/ampl/) and (following the instructions in
+the README file) built file $(AMPL)/solvers/amplsolver.a.
+
+C/C++ interface:
+================
+
+1) Type make algencan-c PROBNAME=toyprob. It will generate an
+executable file called algencan situated in folder $(ALGENCAN)/bin/c/.
+
+2) Move it to your own folder and run it typing ./algencan.
+
+3) Modify file toyprob.c situated in $(ALGENCAN)/sources/interfaces/c/
+to solve your own problem.
+
+CUTEr interface:
+================
+
+1) Type make algencan-cuter PROBNAME=ALLINITC. It will generate an
+executable file called algencan situated in folder
+$(ALGENCAN)/bin/cuter/.
+
+2) Go to your own folder and move to it file OUTSDIF.d situated in
+$(ALGENCAN)/bin/cuter/.
+
+3) From your own folder (were you have moved file OUTSDIF.d) run
+ALGENCAN follwing one of the options above:
+
+3a) Type $(ALGENCAN)/bin/cuter/algencan.
+
+3b) Move file $(ALGENCAN)/bin/cuter/algencan to your own folder and
+type algencan.
+
+3c) Add $(ALGENCAN)/bin/cuter to your PATH environment variable and
+type algencan.
+
+4) In the example above, ALLINITC corresponds to a SIF file called
+ALLINITC.SIF containing the description of the problem to be
+solved. Change the name of the problem to solve other problems from
+the CUTEr collection.
+
+Obs1: It is assumed that you already installed the double precision
+versions of CUTEr and SifDec and that you have set the environment
+variables CUTER, SIFDEC and MASTSIF.
+
+Directory $(SIFDEC)/double/bin/ must contain the executable file
+sifdec, while $(MASTSIF) must contain the SIF files. Directory
+$(CUTER)/double/bin/ must contain file linpac.o and
+$(CUTER)/double/lib/ must contain file libcuter.a.
+
+Examples of these variables follow:
+
+MASTSIF  := $(HOME)/MastSIF/mastsif
+SIFDEC   := $(HOME)/SifDec/SifDec.custom.pc.lnx.gfo
+CUTER    := $(HOME)/CUTEr/cuter-export/CUTEr.custom.pc.lnx.gfo
+
+Java interface:
+===============
+
+1) Type make algencan-java PROBNAME=ToyProb. It will generate files
+called algencan.jar, algencanma.jar and libAlgencan.so situated in
+folder $(ALGENCAN)/bin/java/.
+
+2) Move them to your own folder and run it typing java -jar
+algencanma.jar
+
+3) Modify files ToyProbCharacteristics.java, ToyProbObjFunc.java and
+ToyProbConstr.java situated in $(ALGENCAN)/sources/interfaces/java/ to
+solve your own problem.
+
+Obs1: It is assumed that the environment variable JAVAINC points to
+the directory containing the include library files needed for
+developing Java extensions. Examples of this variable follow:
+
+JAVAINC := /usr/lib/jvm/java-6-sun-1.6.0.16/include
+
+Matlab interface:
+=================
+
+1) Type make algencan-matlab or make algencan-matlab 64BITS=true for
+64 bits platforms. It will generate Matlab executables called
+algencan.mexglx in folder $(ALGENCAN)/bin/matlab.
+
+2) Go to your own folder and copy to it all the *.m files situated in
+$(ALGENCAN)/sources/interfaces/matlab/.
+
+3) Enter into Matlab and type addpath('$(ALGENCAN)/bin/matlab'),
+replacing $(ALGENCAN) with the directory pointed to by it.
+
+4) Run algencan typing algencanma.
+
+5) Modify the appropriate Matlab files (among inip.m, endp.m, evalf.m,
+evalg.m, evalh.m, evalco.m, evaljac.m, evalhc.m, evalfco.m,
+evalgjac.m, evalhl.m and evalhlp.m) in your own folder to solve a
+problem of your interest.
+
+Obs1: See file $(ALGENCAN)/sources/interfaces/matlab/mexopts.sh in
+case you need to change a compilation option.
+
+Octave interface:
+=================
+
+1) Type make algencan-octave. It will generate an Octave library
+called algencan.oct situated in folder $(ALGENCAN)/bin/octave/.
+
+2) Go to your own folder and copy to it files algencan.oct, toyprob.m
+and algencanma.m situated in $(ALGENCAN)/bin/octave/.
+
+3) Enter into Octave and run ALGENCAN typing source("algencanma.m").
+(Note that algencanma.m is not a function but a "script" or "main
+program"; so typing just algencanma.m within Octave will not
+work.)
+
+4) Modify file toyprob.m in your own folder to solve a problem of
+your interest.
+
+Obs1: It is assumed that the environment variables OCTINC and OCTLIB
+point to the directories containing the include and the library files
+needed for developing Octave extensions, respectively. Examples of
+these variables follow:
+
+OCTINC := /usr/include/octave-3.0.0
+OCTLIB := /usr/lib/octave-3.0.0
+
+Python interface:
+=================
+
+1) Type make algencan-py. It will generate a Python module called
+pywrapper.so situated in folder $(ALGENCAN)/bin/py/.
+
+2) Go to your own folder and copy to it files runalgencan.py and
+toyprob.py situated in $(ALGENCAN)/sources/interfaces/py/.
+
+3) Add folder $(ALGENCAN)/bin/py to your PYTHONPATH environment
+variable.
+
+4) Run algencan typing ./runalgencan.py.
+
+5) Modify file toyprob.py in your own folder to solve a problem of
+your interest.
+
+Obs1: It is assumed that (i) packages python, python-dev,
+python-numpy and python-numpy-dev are installed; that (ii)
+the directory PYTHONINC contains the include files needed for
+developing Python extensions and embedding the interpreter and
+that (iii) the directory PYTHONLIB contains the standard Python
+modules. Examples of these variables follow:
+
+PYTHONINC := /usr/include/python2.5
+PYTHONLIB := /usr/lib/python2.5
+
+R interface:
+============
+
+1) Type make algencan-r. It will generate a R module called
+rwrapper.so situated in folder $(ALGENCAN)/bin/r/.
+
+2) Go to your own folder and copy to it files algencanma.r,
+toyprob.r and algencan.so situated in $(ALGENCAN)/bin/r/.
+
+3) Enter into R and run ALGENCAN typing source("algencanma.r").
+
+4) Modify file toyprob.r in your own folder to solve a problem of
+your interest.
+
+Obs1: It is assumed that the directory RINC contains files R.h and
+Rdefines.h. An example of this variable follow:
+
+RINC := /usr/share/R/include
+
+TCL interface
+=============
+
+1) Type make algencan-tcl. It will generate the dinamic library file
+called tclwrapper.so situated in $(ALGENCAN)/bin/tcl/.
+
+2) Go to your own folder and copy the file tclwrapper.so plus the files
+algencanma.tcl and toyprob.tcl situated in
+$(ALGENCAN)/sources/interfaces/tcl/.
+
+3) Run algencan typing tclsh algencanma.tcl.
+
+4) Modify file toyprob.tcl in your own folder to solve a problem of
+your interest.
+
+Obs1: It is assumed that the environment variables TCLINC and TCLLIB
+point to the directories containing the include and the library files
+needed for developing Tcl extensions, respectively. Examples of
+these variables follow:
+
+TCLINC := /usr/include/tcl8.5
+TCLLIB := /usr/lib
